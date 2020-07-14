@@ -10,6 +10,8 @@ loadEventListeners();
 
 
 function loadEventListeners() {
+    // Load saved tasks after DOM Content Loaded
+    document.addEventListener('DOMContentLoaded', getSavedTasks);
     // Submit form
     form.addEventListener('submit', addTask);
 
@@ -42,9 +44,10 @@ function addTask(e) {
     li.appendChild(link);
     tasksList.appendChild(li);
     taskInput.value = '';
+    persistTask(taskInput.value);
     e.preventDefault();
     // Persist to local storage
-    persistTask(taskInput.value);
+
 }
 
 // Delete Task
@@ -93,4 +96,32 @@ function persistTask(task) {
     tasks.push(task);
     // Save the tasks with in the local storage as a string
     localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+// Load saved tasks
+function getSavedTasks() {
+    let tasks;
+    // If there is no saved tasks, start an empty array of tasks
+    if (localStorage.getItem('tasks') === 'null') {
+        tasks = [];
+    } else {
+        // If there is saved tasks, get all of them
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
+
+    tasks.forEach(function(task) {
+        let taskValue = task;
+        const li = document.createElement('li');
+        li.className = 'collection-item';
+        //     Append node to task
+
+        li.appendChild(document.createTextNode(taskValue));
+        //  Create delete link
+        const link = document.createElement('a');
+        link.className = 'delete-item secondary-content';
+        //     Create the link inner HTML
+        link.innerHTML = '<i class = "fa fa-remove"></i>';
+        //     Append li to the link
+        li.appendChild(link);
+        tasksList.appendChild(li);
+    });
 }
