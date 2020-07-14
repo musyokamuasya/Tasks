@@ -57,6 +57,8 @@ function deleteTask(e) {
         // Conform and Remove the task
         if (confirm('Clear Task:')) {
             e.target.parentElement.parentElement.remove();
+            // Remove fro local storage as well
+            removePersistedTask(e.target.parentElement.parentElement);
         }
 
     }
@@ -66,6 +68,7 @@ function clearTasks() {
     // Setting innerHTML to '' would work, but is slower than the while loo[]
     while (tasksList.firstChild) {
         tasksList.removeChild(tasksList.firstChild);
+        clearAllFromStorage();
     }
 }
 
@@ -124,4 +127,28 @@ function getSavedTasks() {
         li.appendChild(link);
         tasksList.appendChild(li);
     });
+}
+
+// Remove persisted task from storage
+function removePersistedTask(taskItem) {
+    let tasks;
+    // If there is no saved tasks, start an empty array of tasks
+    if (localStorage.getItem('tasks') === 'null') {
+        tasks = [];
+    } else {
+        // If there is saved tasks, get all of them
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
+    tasks.forEach(function(task, index) {
+        if (taskItem.textContent === task) {
+            // Splice add/removes item into the array
+            tasks.splice(index, 1);
+        }
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Clear all tasks from local storage
+function clearAllFromStorage() {
+    localStorage.clear();
 }
