@@ -2,7 +2,7 @@ const form = document.querySelector('#task-form');
 const taskInput = document.querySelector('#task');
 const tasksList = document.querySelector('.collection');
 const clearButton = document.querySelector('.clear-tasks');
-const filter = document.querySelector('#task');
+const filter = document.querySelector('#filter');
 
 // Load event listeners
 
@@ -18,6 +18,9 @@ function loadEventListeners() {
 
     //     Clear Tasks
     clearButton.addEventListener('click', clearTasks);
+
+    // Filter tasks
+    filter.addEventListener('keyup', filterTasks);
 }
 
 function addTask(e) {
@@ -52,10 +55,23 @@ function deleteTask(e) {
 
     }
 }
-
+// Clear all tasks
 function clearTasks() {
     // Setting innerHTML to '' would work, but is slower than the while loo[]
     while (tasksList.firstChild) {
         tasksList.removeChild(tasksList.firstChild);
     }
+}
+
+// Filter tasks
+function filterTasks(e) {
+    const text = e.target.value.toLowerCase();
+    document.querySelectorAll('.collection-item').forEach(function(task) {
+        const item = task.firstChild.textContent;
+        if (item.toLowerCase().indexOf(text) != -1) {
+            task.style.display = 'block';
+        } else {
+            task.style.display = 'none';
+        }
+    });
 }
