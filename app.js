@@ -12,6 +12,12 @@ loadEventListeners();
 function loadEventListeners() {
     // Submit form
     form.addEventListener('submit', addTask);
+
+    //     Remove dynamic list
+    tasksList.addEventListener('click', deleteTask);
+
+    //     Clear Tasks
+    clearButton.addEventListener('click', clearTasks);
 }
 
 function addTask(e) {
@@ -24,7 +30,7 @@ function addTask(e) {
     li.appendChild(document.createTextNode(taskInput.value));
     //  Create delete link
     const link = document.createElement('a');
-    link.className = 'delete-element secondary-content';
+    link.className = 'delete-item secondary-content';
     //     Create the link inner HTML
     link.innerHTML = '<i class = "fa fa-remove"></i>';
     //     Append li to the link
@@ -33,4 +39,23 @@ function addTask(e) {
     taskInput.value = '';
     e.preventDefault();
 
+}
+
+// Delete Task
+function deleteTask(e) {
+    //     console.log(e.target);
+    if (e.target.parentElement.classList.contains('delete-item')) {
+        // Conform and Remove the task
+        if (confirm('Clear Task:')) {
+            e.target.parentElement.parentElement.remove();
+        }
+
+    }
+}
+
+function clearTasks() {
+    // Setting innerHTML to '' would work, but is slower than the while loo[]
+    while (tasksList.firstChild) {
+        tasksList.removeChild(tasksList.firstChild);
+    }
 }
