@@ -24,13 +24,15 @@ function loadEventListeners() {
 }
 
 function addTask(e) {
-    if (taskInput.value === '') {
+    let taskValue = taskInput.value;
+    if (taskValue === '') {
         alert('Add a Task');
     }
     const li = document.createElement('li');
     li.className = 'collection-item';
     //     Append node to task
-    li.appendChild(document.createTextNode(taskInput.value));
+
+    li.appendChild(document.createTextNode(taskValue));
     //  Create delete link
     const link = document.createElement('a');
     link.className = 'delete-item secondary-content';
@@ -41,7 +43,8 @@ function addTask(e) {
     tasksList.appendChild(li);
     taskInput.value = '';
     e.preventDefault();
-
+    // Persist to local storage
+    persistTask(taskInput.value);
 }
 
 // Delete Task
@@ -74,4 +77,20 @@ function filterTasks(e) {
             task.style.display = 'none';
         }
     });
+}
+
+// Persist task
+function persistTask(task) {
+    let tasks;
+    // If there is no saved tasks, start an empty array of tasks
+    if (localStorage.getItem('tasks') === 'null') {
+        tasks = [];
+    } else {
+        // If there is saved tasks, get all of them
+        tasks = JSON.parse(localStorage.getItem('tasks'));
+    }
+    // Add the tasks to the task
+    tasks.push(task);
+    // Save the tasks with in the local storage as a string
+    localStorage.setItem('tasks', JSON.stringify(tasks));
 }
